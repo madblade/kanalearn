@@ -1,0 +1,226 @@
+<html lang="en">
+	<head>
+        <meta charset="UTF-8">
+        <title>Kanalearn</title><!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<style>
+			label { font-weight: 100; }
+		</style>
+    </head>
+	<body>
+		<div class="col-sm-6">
+			<div class="col-sm-6">
+				<div class="form-check">
+				  <input class="form-check-input" type="radio" name="radio1" id="radio-katakana" checked>
+				  <label class="form-check-label" for="radio-katakana">
+					Katakana
+				  </label>
+				</div>
+				<div class="form-check">
+				  <input class="form-check-input" type="radio" name="radio1" id="radio-hiragana">
+				  <label class="form-check-label" for="radio-hiragana">
+					Hiragana
+				  </label>
+				</div>
+				
+				<div class="form-check">
+				  <input class="form-check-input" type="radio" name="radio2" id="radio-picture" checked>
+				  <label class="form-check-label" for="radio-picture">
+					Picture mode (!! color bias !!)
+				  </label>
+				</div>
+				<div class="form-check">
+				  <input class="form-check-input" type="radio" name="radio2" id="radio-character">
+				  <label class="form-check-label" for="radio-character">
+					Character mode
+				  </label>
+				</div>
+			</div>
+			<img class="col-sm-6 pull-right" id="whatisaid" src="./img/a.png"></img>
+			<div class="col-sm-1 pull-right" id="whatisaid-char"></div>
+		</div>
+		<div class="col-sm-6">
+			<input id="whathesaid" class="col-sm-4 form-control" type="text" placeholder="What are you reading?">			
+			<div class="col-sm-12">
+				<p class="col-sm-3" id="eta"></p>
+				<p class="col-sm-3 pull-right" id="streak">streak: </p>
+				<p class="col-sm-3 pull-right" id="combo">combo: </p>
+			</div>
+			<div class="col-sm-12">
+				<p id="status" class="col-sm-12">Hello there. You are a bold one.</p>
+			</div>
+		</div>
+	</body>
+	<script>
+	
+	var hiraganas = [
+	'あ', 'い', 'う', 'え', 'お',
+	'か', 'き', 'く', 'け', 'こ',
+	'さ', 'し', 'す', 'せ', 'そ',
+	'た', 'ち', 'つ', 'て', 'と',
+	'な', 'に', 'ぬ', 'ね', 'の', 'ん',
+	'は', 'ひ', 'ふ', 'へ', 'ほ',
+	'ま', 'み', 'む', 'め', 'も',
+	'や', 'ゆ', 	'よ',
+	'ら', 'り' , 'る', 'れ', 'ろ',
+	'わ', 'を'
+	];
+	
+	var katakanas = [
+	'ア', 'イ', 'ウ', 'エ', 'オ',
+	'カ', 'キ', 'ク', 'ケ', 'コ',
+	'サ', 'シ', 'ス', 'セ', 'ソ',
+	'タ', 'チ', 'ツ', 'テ', 'ト',
+	'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ン',
+	'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
+	'マ', 'ミ', 'ム', 'メ', 'モ',
+	'ヤ', 'ユ', 'ヨ',
+	'ラ', 'リ', 'ル', 'レ', 'ロ',
+	'ワ', 'ヲ'
+	];
+	
+	var kanas = [
+	['a'],  ['i'],   ['u'],   ['e'],  ['o'],
+	['ka'], ['ki'],  ['ku'],  ['ke'], ['ko'],
+	['sa'], ['shi'], ['su'],  ['se'], ['so'],
+	['ta'], ['chi'], ['tsu'], ['te'], ['to'],
+	['na'], ['ni'],  ['nu'],  ['ne'], ['no'], ['n'],
+	['ha'], ['hi'],  ['fu'],  ['he'], ['ho'],
+	['ma'], ['mi'],  ['mu'],  ['me'], ['mo'],
+	['ya'],          ['yu'],          ['yo'],
+	['ra'], ['ri'],  ['ru'],  ['re'], ['ro'],
+	['wa'],                   ['wo'] // , ['uma']
+	];
+	
+	var scores = Array(kanas.length).fill(0);
+	
+	let N = kanas.length;
+	let rotation = [...Array(N).keys()];
+	shuffle(rotation);
+	
+	let index = 0;
+	$('#whatisaid').attr('src', './img/' + kanas[rotation[index]] + '.png');
+	let maxEta = 3;
+	let eta = maxEta;
+	let streak = 0;
+	let needNext = false;
+	let comboMax = 0;
+	setInterval(function() {
+		update();
+	}, 1000);
+	
+	let whathesaid = '';
+	$('#whathesaid').keyup(function() {
+		whathesaid = $(this).val();
+		if (whathesaid == kanas[rotation[index]]) {
+			if (streak > 0) streak++;
+			else streak = 1;
+			scores[rotation[index]]++;
+			comboMax = Math.max(streak, comboMax);
+			$('#status').text('Bravi.').attr('style', 'color:green');
+			eta = maxEta;
+			next();
+		}
+	});
+	
+	function shuffle(a) {
+		// Shuffle.
+		let j, x, i;
+		for (i = a.length - 1; i > 0; i--) {
+			j = Math.floor(Math.random() * (i + 1));
+			x = a[i];
+			a[i] = a[j];
+			a[j] = x;
+		}
+		
+		// Put most difficult symbols first.
+		let na = 0;
+		for (let m = 0; m < a.length; ++m) { // Naive quadratic reordering.
+			// find argmin of remaining tab.
+			let argmin = m;
+			for (let n = m + 1; n < a.length; ++n) {
+				if (scores[a[n]] < scores[a[m]]) argmin = n; 
+			}
+			// put it at current place.
+			if (argmin !== m) {
+				x = a[m];
+				a[m] = a[argmin];
+				a[argmin] = x;
+			}
+		}
+		
+		return a;
+	}
+	
+	function update() {
+		eta--;
+		if (needNext) {
+			needNext = false;
+			eta = maxEta;
+			next();
+		} else if (eta === 0) {
+			let heSaid = whathesaid;
+			if (heSaid !== kanas[rotation[index]]) {
+				if (streak > 0) streak = 0;
+				else streak--;
+				scores[rotation[index]]--;
+				$('#status').text(kanas[rotation[index]]).attr('style','color:orange');
+			} 
+			else {
+				if (streak > 0) streak++;
+				else streak = 1;
+				scores[rotation[index]]++;
+				$('#status').text('Bravi.').attr('style', 'color:green');
+				needNext = true;
+			}
+		
+		} else if (eta < 0) {
+			if (eta < -2) {
+				eta = maxEta;
+				next();
+			}
+		}
+		$('#eta').text(eta > 0 ? eta : 0);
+	}
+	
+	function next()
+	{
+		$('#combo').text('combo: ' + comboMax);
+		$('#streak').text('streak: ' + streak);
+		$('#whathesaid').val('');
+		$('#status').text('');
+		index++;
+		if (index >= 10) { // kanas.length
+			index = 0;
+			shuffle(rotation);
+		}
+		
+		let usePicture = $('#radio-picture').is(':checked');
+		let katakanaPool = $('#radio-katakana').is(':checked');
+		let hiraganaPool = $('#radio-hiragana').is(':checked');
+		if (hiraganaPool && katakanaPool) {
+			console.log('Can\'t train on both hiraganas and katakanas at the time.');
+			return;
+		}
+		
+		if (usePicture) {
+			let prefix = hiraganaPool ? 'h-' : ''; 
+			$('#whatisaid')
+				.attr('src', './img/' + prefix + kanas[rotation[index]] + '.png')
+				.attr('style', '');
+			$('#whatisaid-char')
+				.attr('style', 'display: none');
+		} else {
+			$('#whatisaid')
+				.attr('style', 'display:none');
+				
+			$('#whatisaid-char')
+				.attr('style', 'font-size:30px')
+				.text(katakanaPool ? katakanas[rotation[index]] : hiraganas[rotation[index]]);
+		}
+	}
+	
+	</script>
+</html>
