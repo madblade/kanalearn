@@ -1,57 +1,86 @@
 <html lang="en">
 	<head>
-        <meta charset="UTF-8">
-        <title>Kanalearn</title><!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      <meta charset="UTF-8">
+      <meta name=viewport content="width=device-width, initial-scale=1">
+      <title>Kanalearn</title><!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 		<style>
 			label { font-weight: 100; }
+         #whatisaid { max-width: 300px; }
+         .large-text { margin-top: 10px; font-size: 20pt; }
+         #whatisaid-char { margin-bottom: 20px; }
 		</style>
     </head>
 	<body>
-		<div class="col-sm-6">
-			<div class="col-sm-6">
-				<div class="form-check">
-				  <input class="form-check-input" type="radio" name="radio1" id="radio-katakana" checked>
-				  <label class="form-check-label" for="radio-katakana">
-					Katakana
-				  </label>
-				</div>
-				<div class="form-check">
-				  <input class="form-check-input" type="radio" name="radio1" id="radio-hiragana">
-				  <label class="form-check-label" for="radio-hiragana">
-					Hiragana
-				  </label>
-				</div>
-				
-				<div class="form-check">
-				  <input class="form-check-input" type="radio" name="radio2" id="radio-picture" checked>
-				  <label class="form-check-label" for="radio-picture">
-					Picture mode (!! color bias !!)
-				  </label>
-				</div>
-				<div class="form-check">
-				  <input class="form-check-input" type="radio" name="radio2" id="radio-character">
-				  <label class="form-check-label" for="radio-character">
-					Character mode
-				  </label>
-				</div>
-			</div>
-			<img class="col-sm-6 pull-right" id="whatisaid" src="./img/a.png"></img>
-			<div class="col-sm-1 pull-right" id="whatisaid-char"></div>
-		</div>
-		<div class="col-sm-6">
-			<input id="whathesaid" class="col-sm-4 form-control" type="text" placeholder="What are you reading?">			
-			<div class="col-sm-12">
-				<p class="col-sm-3" id="eta"></p>
-				<p class="col-sm-3 pull-right" id="streak">streak: </p>
-				<p class="col-sm-3 pull-right" id="combo">combo: </p>
-			</div>
-			<div class="col-sm-12">
-				<p id="status" class="col-sm-12">Hello there. You are a bold one.</p>
-			</div>
-		</div>
+      <div class="container">
+         <div class="row col-12">
+            <div class="col-6 col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="radio1" id="radio-katakana" checked>
+              <label class="form-check-label" for="radio-katakana">
+               Katakana
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="radio1" id="radio-hiragana">
+              <label class="form-check-label" for="radio-hiragana">
+               Hiragana
+              </label>
+            </div>
+            </div>
+            
+            <div class="col-6 col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="radio2" id="radio-picture" checked>
+              <label class="form-check-label" for="radio-picture">
+               Pictures
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="radio2" id="radio-character">
+              <label class="form-check-label" for="radio-character">
+               Characters
+              </label>  
+            </div>            
+            </div>
+         </div>
+         
+         <hr>
+         
+         <div class="row col-12">
+            <img class="col-12 col-md-6" id="whatisaid" src="./img/a.png"></img>
+            <div class="col-md-1" id="whatisaid-char"></div>
+            <div class="col-12 col-md-5" id="whathesaid-wrapper">
+               <input id="whathesaid" class="col-12 form-control" type="text" placeholder="What are you reading?">
+               
+               <div class="row col-12 large-text">
+                  <p id="eta" class="col-6">
+                  </p> 
+                  <p id="status" class="col-6">
+                  </p>
+               </div>
+            </div>
+         </div>
+         
+         <hr>
+         
+         <div class="row col-12">
+            <p class="col-6 col-md-3" id="streak">streak: </p>
+            <p class="col-6 col-md-3" id="combo">combo: </p>
+         </div>
+      
+         <hr>
+         
+      </div>
+      
+      <footer class="footer">
+         <div class="container">
+           <span class="text-muted">Artwork by <a href="https://github.com/levg34">@levg34</a>.</span>
+         </div>
+      </footer>
 	</body>
 	<script>
 	
@@ -101,8 +130,10 @@
 	shuffle(rotation);
 	
 	let index = 0;
-	$('#whatisaid').attr('src', './img/' + kanas[rotation[index]] + '.png');
-	let maxEta = 3;
+	$('#whatisaid')
+      .attr('src', './img/' + kanas[rotation[index]] + '.png')
+      .attr('alt', katakanas[rotation[index]]);
+	let maxEta = 4;
 	let eta = maxEta;
 	let streak = 0;
 	let needNext = false;
@@ -209,6 +240,7 @@
 			let prefix = hiraganaPool ? 'h-' : ''; 
 			$('#whatisaid')
 				.attr('src', './img/' + prefix + kanas[rotation[index]] + '.png')
+            .attr('alt', (hiraganaPool ? hiraganas : katakanas) [rotation[index]])
 				.attr('style', '');
 			$('#whatisaid-char')
 				.attr('style', 'display: none');
@@ -217,7 +249,7 @@
 				.attr('style', 'display:none');
 				
 			$('#whatisaid-char')
-				.attr('style', 'font-size:30px')
+				.attr('style', 'font-size:40pt')
 				.text(katakanaPool ? katakanas[rotation[index]] : hiraganas[rotation[index]]);
 		}
 	}
